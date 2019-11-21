@@ -34,11 +34,7 @@ La suite de ce document propose le détail d’une conception possible de ce typ
 ## Mécanisme de réputation
 
 
-    Créer une fonction postuler() qui permet à un indépendant de proposer ses services. Il est alors ajouté à la liste des candidats
-
-    Créer une fonction accepterOffre() qui permet à l’entreprise d’accepter un illustrateur. La demande est alors ENCOURS jusqu’à sa remise
-
-    Ecrire une fonction livraison() qui permet à l’illustrateur de remettre le hash du lien où se trouve son travail. Les fonds sont alors automatiquement débloqués et peuvent être retirés par l’illustrateur. L’illustrateur gagne aussi un point de réputation
+    Pour représenter la réputation, nous allons associer chaque utilisateur à une valeur entière
 
     Lorsqu’un nouveau participant rejoint la plateforme, il appelle la fonction inscription() qui lui donne une réputation de 1. Il faut une réputation minimale pour accéder à la plupart des fonctionnalités. Un nom est aussi associé à l’adresse
 
@@ -68,3 +64,11 @@ La suite de ce document propose le détail d’une conception possible de ce typ
     Créer une fonction ajouterDemande() qui permet à une entreprise de formuler une demande. L’adresse du demandeur doit être inscrite sur la plateforme. L’entreprise doit en même temps déposer l’argent sur la plateforme correspondant à la rémunération + 2% de frais pour la plateforme.
 
     Ecrire l’interface qui permet de lister ces offres
+    
+## Mécanisme de contractualisation
+
+    Créer une fonction postuler() qui permet à un indépendant de proposer ses services. Il est alors ajouté à la liste des candidats
+
+    Créer une fonction accepterOffre() qui permet à l’entreprise d’accepter un illustrateur. La demande est alors ENCOURS jusqu’à sa remise
+
+    Ecrire une fonction livraison() qui permet à l’illustrateur de remettre le hash du lien où se trouve son travail. Les fonds sont alors automatiquement débloqués et peuvent être retirés par l’illustrateur. L’illustrateur gagne aussi un point de réputation
