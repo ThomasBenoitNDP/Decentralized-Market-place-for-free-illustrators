@@ -34,7 +34,11 @@ La suite de ce document propose le détail d’une conception possible de ce typ
 ## Mécanisme de réputation
 
 
-    Pour représenter la réputation, nous allons associer chaque utilisateur à une valeur entière
+    Créer une fonction postuler() qui permet à un indépendant de proposer ses services. Il est alors ajouté à la liste des candidats
+
+    Créer une fonction accepterOffre() qui permet à l’entreprise d’accepter un illustrateur. La demande est alors ENCOURS jusqu’à sa remise
+
+    Ecrire une fonction livraison() qui permet à l’illustrateur de remettre le hash du lien où se trouve son travail. Les fonds sont alors automatiquement débloqués et peuvent être retirés par l’illustrateur. L’illustrateur gagne aussi un point de réputation
 
     Lorsqu’un nouveau participant rejoint la plateforme, il appelle la fonction inscription() qui lui donne une réputation de 1. Il faut une réputation minimale pour accéder à la plupart des fonctionnalités. Un nom est aussi associé à l’adresse
 
