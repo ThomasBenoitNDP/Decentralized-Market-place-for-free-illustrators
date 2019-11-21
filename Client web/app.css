@@ -1,0 +1,28 @@
+body {
+    background-color: #E78B90;
+    color: #FCE8DF;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    text-align: center;
+}
+
+.shadowbox {
+  margin-left: auto;
+  margin-right: auto;
+  width: 40em;
+  border: 3px solid #FCE8DF;
+  box-shadow: 8px 8px 5px #444;
+  padding: 8px 12px;
+  background-image: #FFF;
+}
+
+table {
+margin-left: auto;
+margin-right: auto;
+border: medium solid #FCE8DF;
+width: 100%;
+
+}
+td, th {
+border: thin solid #FCE8DF;
+width: 15%;
+}

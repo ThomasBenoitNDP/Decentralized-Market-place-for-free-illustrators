@@ -1,0 +1,170 @@
+README: Alyra défi 2
+
+L'archive associée à ce readme:
+	- le smartcontract AlyraDefi2.sol
+	- (le readme.txt)
+	- Un dossier ClientWeb
+		- app.css
+		- app.html
+		- app.js
+
+/!\ Mais vous pouvez retrouver ces documents sur:
+
+Smart Contrat: 
+https://remix.ethereum.org/#optimize=false&evmVersion=null&version=soljson-v0.5.11+commit.c082d0b4.js
+
+	-> AlyraDefi2.sol
+
+
+Pour la partie interface graphique (intéraction entre le smartcontract et client web) (partie 2): 
+https://studio.ethereum.org/5dd3c49f26b473001233eb74
+
+
+
+----------------------------------------------------------------------------------------------------------
+
+Note sur le déploiement sur Ethereum Studio:
+
+	
+	Ethereum Studio n'accepte pas de déployer un smartcontrat avec des warnings.
+	"pragma experimental ABIEncoderV2;" ne peut pas être utilisé sous Ethereum Studio. 
+	(Du moins, je n'ai pas trouvé d'indication pour le rendre possible)
+
+La libraire SafeMath ######
+
+	Sur Remix Ethereum, nous pouvons l'importer depuis le lien Github d'Openzeppelin. Ethereum Stdudio ne peut pas importer SafeMath si la librairie n'est pas incluse dans le projet.
+	-> La librairie est incluse dans le smartcontrat.
+	-> Ultérieurement, la librairie SafeMath sera importée  depuis "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/math/SafeMath.sol"
+
+
+Constructor ######
+
+L'acteur qui déploie le contrat devient administrateur. Son adresse réceptionera les frais d'ajout d'une nouvelle demande.
+    
+
+    address adminAddress;
+    
+    constructor() public {
+        adminAddr[msg.sender] = true;
+        inscription("admin");
+        balances[msg.sender] = 1000000;
+        adminAddress = msg.sender;
+    }
+
+
+
+Partie 1 ######
+
+Plusieurs mapping ont été crée: 
+
+    // The reputation of users
+    mapping (address => int256) reputations;
+        
+    // The name of users 
+    mapping (address => string) names;
+        
+    // The list of baned addresses 
+    mapping (address => bool) banedAddr;
+        
+    // The list of administrator user
+    mapping (address => bool) adminAddr;
+        
+    // The existing users 
+    mapping (address => bool) existingAddr;
+
+
+
+
+Partie 2 ######
+
+- La structure Demande a été enrichie avec de nouveaux composants:
+
+    // Definition d'une demande 
+    struct Demande {
+	// composants exigés:
+        uint remuneration ; 
+        uint256 delai; 
+        string description;
+        Etat etat;
+        int minReputation;
+        
+        // Nouveaux composants: <----------- 
+        address[] candidats;    // liste des candidats (sous forme d'un tableau d'adresse
+        address maker;          // l'artiste qui prend en charge la commande
+        address owner;          // l'émetteur de la requête
+        address hashLink;       // Le hash du lien du résultat
+    }   
+
+- Evenement : Dès qu'une demande est généré, un événement est transmis au client web/
+		+ On transmet dans l'évènement l'index de la demande au sein du tableau des demandes
+
+    /* Evenements */
+    event TransferDemande (
+        uint remuneration , // en wei
+        uint256 delai,
+        string description,
+        Etat etat,
+        int minReputation,
+        
+        // Pour la partie 3:
+        uint index
+        );
+ 
+- Mapping Demandeurs <-> index de leurs demandes. Ce mapping nous permettra de retourner les indexes des demandes des entrepreprises.
+
+    // Ce mapping associe chaque demandeur à ses demandes
+    mapping (address => uint[]) mesDemandes;
+
+
+
+
+
+Partie 3 ######
+
+- Pour la gestion des fonds: Créer un système de compte et de transfert de fonds 
+
+ 	mapping (address => uint) balances;
+    
+    	/* Pour que l'artiste récupère les fonds provenant de l'entreprise */
+    	function transfert(address _issuer, address _recipient, uint _value)  public {
+        	require (balances[ _issuer] >= _value, "Insufficient funds!"); 
+        	balances[ _issuer] -= _value;
+        	balances[_recipient] += _value;
+    	}
+
+- Index des demandes: Les fonctions postuler, accepterOffre, Livraison manipulent les demandes à partir de leurs indexes dans le tableau des demandes (Demande[] demandes)
+
+- Dans la fonction Livraison: 
+	Hash du lien du rendu: l'utilisation des fonctions de hashage en solifity coûtent du Gaz. pour rendre cette action "gratuite", le hachage du lien doit être fait par l'artiste.
+
+
+
+
+ANNEXE ######
+Cette rubrique liste des fonctions "Get". Leur but est d'auditer les informations de la blockchain. 
+
+    /* Pour lire son solde */
+    function getBalance () onlyExisting public view  returns (uint) {
+        return balances[msg.sender];
+    }
+
+    /* Vérifier qu'un utilisateur est administrateur */
+    function getAdmin () onlyExisting public view  returns (bool) {
+        return adminAddr[msg.sender];
+    }
+    
+    /* Permet à une entreprise de visualiser ses demandes */
+    function getMesDemandes () onlyExisting public view  returns (uint[] memory) {
+        return mesDemandes[msg.sender];
+    }
+    
+    /* Pour obtenir l'état d'une demande donnée */
+    function getDemandes (uint _index) onlyExisting public view  returns (Demande memory ) {
+        return demandes[_index];
+    }
+
+    /* Pour obtenir le hash du lien du résulat d'une commande */
+    function getHashLink (uint _index) onlyExisting public view  returns (address) {
+        require(demandes[_index].owner == msg.sender, "You are not the owner of this request!");
+        return demandes[_index].hashLink;
+    }
