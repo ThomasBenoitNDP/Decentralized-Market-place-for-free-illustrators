@@ -1,8 +1,6 @@
 /* PGM écrit par Thomas BENOIT dans le cadre de la formation développeur Alyra , Novembre 2019*/
-
 pragma solidity ^0.5.1;
 pragma experimental ABIEncoderV2; // <--- Génère un Warning qui peut bloquer le déploiement! 
-
 
 contract AlyraDefi2{
    
@@ -234,6 +232,13 @@ contract AlyraDefi2{
     
 }
 
+
+/* La libraire SafeMath ######
+
+	Sur Remix Ethereum, nous pouvons l'importer depuis le lien Github d'Openzeppelin. Ethereum Stdudio ne peut pas importer SafeMath si la librairie n'est pas incluse dans le projet.
+	-> La librairie est incluse dans le smartcontrat.
+	-> Ultérieurement, la librairie SafeMath sera importée  depuis "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/math/SafeMath.sol"
+ */
 /* Librairie SafeMath */
 library SafeMath {
    function mul(uint256 a, uint256 b) internal pure returns (uint256) {
